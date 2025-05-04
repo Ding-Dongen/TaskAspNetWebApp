@@ -51,7 +51,7 @@ TaskAspNet/
 - Rich-text editor via [Quill.js](https://quilljs.com/)
 - Search filtering using [Fuse.js](https://fusejs.io/)
 - Dark mode toggle with persistent user preference
-
+- For pagination i used XPagedList package 
 - There is a seed file for SuperAdmin(check it out for sign in credentials)
 
 ## Technology Stack
@@ -97,7 +97,7 @@ From the root directory, run:
 ```
  
 dotnet ef database update --context AppDbContext --project TaskAspNet.Data --startup-project TaskAspNet.Web
-dotnet ef database update --context User --project TaskAspNet.Data --startup-project TaskAspNet.Web
+dotnet ef database update --context UserDbContext --project TaskAspNet.Data --startup-project TaskAspNet.Web
  
 ```
  
