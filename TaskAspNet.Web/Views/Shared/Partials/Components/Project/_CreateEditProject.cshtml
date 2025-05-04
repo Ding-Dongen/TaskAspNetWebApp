@@ -1,0 +1,196 @@
+﻿
+
+@model ProjectDto
+
+@{
+
+    var clients = ViewData["Clients"] as IEnumerable<ClientDto>
+                  ?? Enumerable.Empty<ClientDto>();
+
+    var clientSelectList = new SelectList(clients, "Id", "ClientName", Model.ClientId);
+
+    var formAction = Model.Id > 0 ? "Edit" : "Create";
+}
+
+<div class="wrapper-project-form">
+    <form asp-action="@formAction"
+          asp-controller="Project"
+          method="post"
+          enctype="multipart/form-data"
+          data-validate="true"
+          id="projectForm">
+
+        @Html.AntiForgeryToken()
+
+       
+        <input type="hidden" asp-for="Id" />
+
+        @* <p>Debug: Project ID is @Model.Id</p> *@
+
+        
+       
+         <div class="image-upload-wrapper">
+            <div class="image-upload-container">
+                <div class="image-upload" id="openUploadModal" data-modal="uploadModal">
+                    <div class="upload-preview">
+                        <img id="cameraPreview"
+                             src="@(!string.IsNullOrWhiteSpace(Model.ImageData?.CurrentImage)
+                                   ? Model.ImageData.CurrentImage
+                                   : "/images/default.png")"
+                             alt="Preview" />
+
+                        <div class="wrapper-camera" id="cameraOverlay">
+                            <i class="fa-solid fa-camera"></i>
+                        </div>
+
+                        <div class="edit-icon">
+                            <i class="fa-solid fa-pen"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" asp-for="ImageData.CurrentImage" id="hiddenCurrentImage" />
+                <input type="hidden" asp-for="ImageData.SelectedImage" id="hiddenSelectedImage" />
+                <input type="file" asp-for="ImageData.UploadedImage" id="fileInput" style="display: none;" accept="image/*" />
+            </div>
+        </div>
+
+
+
+
+
+       
+        @await Html.PartialAsync("~/Views/Shared/Partials/Components/_UploadSelectImgModal.cshtml", Model.ImageData)
+
+        
+        <div class="form-group">
+            <label asp-for="Name">Project Name <span class="text-danger">*</span></label>
+                <div class="input-wrapper">
+                    <input asp-for="Name" class="form-control" required placeholder="Project Name" 
+                           data-validate-rule="required"
+                           data-validate-message="Project name is required." />
+                    <i class="fa-solid fa-triangle-exclamation error-icon"></i>
+                </div>
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+
+        
+
+        <div class="form-group">
+            <label asp-for="ClientId">Client <span class="text-danger">*</span></label>
+            <div class="input-wrapper">
+                <select asp-for="ClientId"
+                        asp-items="@(new SelectList(clients, "Id", "ClientName", Model.ClientId))"
+                        class="form-control"
+                        required>
+                    <option value="">-- Select Client --</option>
+                </select>
+                <span asp-validation-for="ClientId" class="text-danger"></span>
+            </div>
+        </div>
+
+        
+        <div class="form-group">
+            <label asp-for="Description"></label>
+            <div class="toolbar-wrapper">
+            <div class="quill-editor editor-wide" data-target="#descriptionInput" data-toolbar="#custom-toolbar"></div>
+                <div id="custom-toolbar">
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                    </span>
+
+                    <span class="ql-formats">
+                        <button class="ql-align" value=""></button>         
+                        <button class="ql-align" value="center"></button>   
+                        <button class="ql-align" value="right"></button>    
+                     </span>
+
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link"></button>
+                    </span>
+                </div>
+
+            </div>
+
+            <textarea type="hidden" asp-for="Description" id="descriptionInput" class="form-control desciption-hide"></textarea>
+
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        
+        <div class="date-group">
+            <div class="form-group">
+                <label asp-for="StartDate">Start Date <span class="text-danger">*</span></label>
+                <input asp-for="StartDate" type="date" class="form-control" required />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDate">End Date</label>
+                <input asp-for="EndDate" type="date" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+        </div>
+
+        @if (User.IsAdminOrSuperAdmin())
+        {
+            <div class="form-group">
+                <label asp-for="StatusId">Status <span class="text-danger">*</span></label>
+                <select asp-for="StatusId" class="form-control">
+                    <option value="1">Started</option>
+                    <option value="2">Completed</option>
+                </select>
+                <span asp-validation-for="StatusId" class="text-danger"></span>
+            </div>
+        }
+        else
+        {
+            <input type="hidden" asp-for="StatusId" value="1" />
+        }
+
+        @if (User.IsAdminOrSuperAdmin() && Model.Id == 0)
+        {
+        <div class="form-group">
+            <label>Members</label>
+            <div class="memberSearchContainer">
+                <div id="selectedChipsContainer" class="chips-container"></div>
+                <input type="text" id="memberSearchInput" placeholder="Search members..." class="form-control" autocomplete="off" />
+                <i class="fas fa-search search-icon"></i>
+            </div>
+            <ul id="memberSearchResults" class="search-results"></ul>
+        </div>
+        <div id="memberInputsContainer"></div>
+        }
+        
+        <div class="form-group">
+            <label asp-for="Budget">Budget <span class="text-danger">*</span></label>
+            <div class="input-with-symbol input-wrapper">
+                <span class="input-symbol">$</span>
+                <input asp-for="Budget" type="text" class="form-control" required placeholder="0" 
+                           data-validate-rule="required"
+                           data-validate-message="Budget is required."/>
+                <i class="fa-solid fa-triangle-exclamation error-icon"></i>
+            </div>
+            <span asp-validation-for="Budget" class="text-danger"></span>
+        </div>
+
+
+
+        <button type="submit" class="btn btn-project-form">Save</button>
+    </form>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/project/CreateEditProject.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/js/project/CreateEditProject.js" asp-append-version="true"></script>
+    <script src="~/js/member/ModalImg.js" asp-append-version="true"></script>
+}

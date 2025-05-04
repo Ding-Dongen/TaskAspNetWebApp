@@ -1,0 +1,37 @@
+﻿<div id="addRemoveMemberModal" class="upload-modal-overlay-add" style="display:none;">
+    <div class="upload-modal-content-add">
+        <h2>Add/Remove Members</h2>
+
+        <form class="form-add-remove" asp-action="UpdateMembers" asp-controller="Project" method="post" onsubmit="return confirm('Save member changes?');">
+
+            @Html.AntiForgeryToken()
+            <input type="hidden" id="modalProjectId" name="ProjectId" />
+            
+
+            <div class="search-bar-add-remove">
+                <label for="modalSearchInput">Search Members:</label>
+                <input type="text" id="modalSearchInput" placeholder="Search members..." class="search-bar-add-remove-input" autocomplete="off" />
+            </div>
+
+            <ul id="modalSearchResults" class="search-results"></ul>
+
+            <div id="modalMemberList">
+                <p>Loading members...</p>
+            </div>
+
+            <div class="modal-actions">
+                <button type="submit" class="btn btn-add-remove-member">Save</button>
+                <button type="button" class="btn btn-add-remove-member" onclick="closeModal('addRemoveMemberModal')">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/project/ProjectCardModalMenu.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/project/CardMenu.js" asp-append-version="true"></script>
+}

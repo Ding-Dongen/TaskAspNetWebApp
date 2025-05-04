@@ -1,0 +1,80 @@
+﻿
+
+@model ProjectIndexViewModel
+
+@{
+    var createProjectViewData = new ViewDataDictionary(ViewData)
+    {
+        ["Clients"] = ViewData["Clients"],
+        ["SelectedClientId"] = ViewData["SelectedClientId"]
+    };
+}
+
+
+
+<div class="projects-container">
+    <div class="project-header">
+        <h2>Projects</h2>
+        <button id="btnOpenCreateModal" data-modal="createProjectModal" class="btn btn-create-form">+ Add Project</button>
+    </div>
+
+    <div class="project-tabs">
+        <a href="?status=All" class="tab @(Model.SelectedStatus == "All" ? "active" : "")">
+            ALL [@Model.AllProjects.Count]
+        </a>
+        <a href="?status=Started" class="tab @(Model.SelectedStatus == "Started" ? "active" : "")">
+            STARTED [@Model.AllProjects.Count(p => p.StatusId == 1)]
+        </a>
+        <a href="?status=Completed" class="tab @(Model.SelectedStatus == "Completed" ? "active" : "")">
+            COMPLETED [@Model.AllProjects.Count(p => p.StatusId == 2)]
+        </a>
+    </div>
+
+    <div class="project-cards">
+        @foreach (var project in Model.PagedProject)
+        {
+            @await Html.PartialAsync("~/Views/Shared/Partials/Components/Project/_ProjectCard.cshtml", project)
+        }
+    </div>
+
+    @Html.PagedListPager(Model.PagedProject, p => Url.Action("Index", new { page = p, status = Model.SelectedStatus }), new PagedListRenderOptions { MaximumPageNumbersToDisplay = 7 })
+
+
+    <div id="editProjectModal" class="upload-modal-overlay" style="display: none;">
+        <div class="upload-modal-content">
+           <div class="create-form-header">
+            <h3>Edit Project</h3>
+            <span class="close-modal">&times;</span>
+            </div>
+            <div id="editProjectContainer" class="create-edit-form-container">
+                
+            </div>
+        </div>
+    </div>
+
+    <div id="createProjectModal" class="upload-modal-overlay" style="display: none;">
+        <div class="upload-modal-content">
+            <div class="create-form-header">
+            <h3>Add Project</h3>
+            <span class="close-modal">&times;</span>
+            </div>
+            <div id="createProjectContainer" class="create-edit-form-container">
+                @await Html.PartialAsync("~/Views/Shared/Partials/Components/Project/_CreateEditProject.cshtml", Model.CreateProject, createProjectViewData)
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    @* <link rel="stylesheet" href="~/css/project/ProjectCards.css" asp-append-version="true" /> *@
+    <link rel="stylesheet" href="~/css/project/ProjectCardModalMenu.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/project/CreateEditProject.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/project/Index.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/project/CardMenu.js" asp-append-version="true"></script>
+    <script src="~/js/project/CreateEditProject.js" asp-append-version="true"></script>
+
+}

@@ -1,0 +1,51 @@
+﻿@model ClientIndexViewModel
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+
+<div class="member-container">
+    <div class="member-header">
+        <h2>Clients</h2>
+        <button id="btnOpenCreateModal" data-modal="createClientModal" class="btn btn-create-form">+ Add Client</button>
+    </div>
+
+
+    <div class="member-list">
+        @foreach (var client in Model.PagedClients)
+        {
+            @await Html.PartialAsync("~/Views/Shared/Partials/Components/Client/_ClientCard.cshtml", client)
+        }
+    </div>
+    @Html.PagedListPager(Model.PagedClients, page => Url.Action("Index", new { page }), new PagedListRenderOptions { MaximumPageNumbersToDisplay = 7 })
+</div>
+
+<div id="createClientModal" class="modal-overlay create-modal-overlay">
+    <div class="modal-content create-modal-content">
+        <h3 class="create-modal-title">New Client</h3>
+        <button class="modal-close" onclick="closeModal('createClientModal')">&times;</button>
+        <div id="createClientContainer">
+            @await Html.PartialAsync("~/Views/Shared/Partials/Components/Client/_CreateEditClient.cshtml", Model.CreateClient)
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+        <link rel="stylesheet" href="~/css/client/ClientCard.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/client/Index.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/client/CreateEditClient.css" asp-append-version="true" />
+}
+
+@section Scripts {
+         <script src="~/js/client/ClientCard.js" asp-append-version="true"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/js/client/CreateEditClient.js" asp-append-version="true"></script>
+}

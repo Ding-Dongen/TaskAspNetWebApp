@@ -1,0 +1,78 @@
+﻿@model UserLogInForm
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="admin-login-wrapper">
+    <div class="admin-panel-wrapper">
+        <div class="admin-panel-content">
+            <div class="admin-panel-header">
+                <h1>Welcome to</h1>
+                <h1 class="different-text">Admin Panel</h1>
+            </div>
+            <div class="admin-panel-text">
+                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Laboriosam vitae rerum, sit amet praesentium corrupti recusandae rem corporis nisi dolorum totam magni iste, nulla soluta blanditiis distinctio? Ipsa, porro quidem.</p>
+            </div>
+        </div>
+    </div>
+    <div class="login-wrapper">
+        <div class="form-container">
+            <h2>Login</h2>
+            <a class="google-signup" asp-controller="Auth" asp-action="ExternalLogin" asp-route-provider="Google">
+                <img src="https://img.icons8.com/color/48/000000/google-logo.png" alt="Google Logo">
+                <span>Login with Google</span>
+            </a>
+            <div class="or-separator">
+                <hr />
+                <span>OR</span>
+                <hr />
+            </div>
+            <form asp-action="LogIn" asp-controller="Auth" method="post" novalidate data-validate="true">
+                <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+                <div class="form-login">
+                    <label asp-for="Email">Email</label>
+                    <div class="input-wrapper">
+                        <input asp-for="Email" type="email" id="email" placeholder="Your email address"
+                               data-validate-rule="email"
+                               data-validate-message="Enter a valid email ex. (example@example.ca)">
+                        <i class="fa-solid fa-triangle-exclamation error-icon"></i>
+                    </div>
+                    <span class="text-danger" asp-validation-for="Email"></span>
+                </div>
+                <div class="form-login">
+                    <label asp-for="Password">Password</label>
+                    <div class="input-wrapper password-wrapper">
+                        <input asp-for="Password" type="password" id="password" placeholder="Enter your password"
+                               data-toggle="password"
+                               data-validate-rule="password"
+                               data-validate-message="Min. 8 chars, incl. uppercase, lowercase, number & special symbol.">
+                        <i class="fa-solid fa-triangle-exclamation error-icon"></i>
+
+                        <span class="toggle-password">
+                            <i class="fa-solid fa-eye" id="togglePassword"></i>
+                        </span>
+                    </div>
+                    <span class="text-danger" asp-validation-for="Password"></span>
+                </div>
+
+                <div class="is-persistent-password">
+                    <div class="remember-me">
+                        <input asp-for="RememberMe" type="checkbox" id="rememberMe" />
+                        <label asp-for="RememberMe" for="rememberMe">Remember Me</label>
+                    </div>
+                    <div>
+                        <a hred="#">Forgot Password?</a>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Log In</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin/Index.css" asp-append-version="true" />
+}

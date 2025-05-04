@@ -1,0 +1,26 @@
+@model MemberDto
+
+
+<div id="createMemberModal" class="modal-overlay create-upload-modal-overlay">
+    <div class="modal-content create-modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Complete Your Profile</h5>
+        </div>
+        <div class="modal-body">
+            <div id="createMemberFormContainer">
+               
+                @await Html.PartialAsync("~/Views/Shared/Partials/Components/Member/_CreateEditMember.cshtml", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/member/CreateEditMember.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/js/member/CreateEditMember.js" asp-append-version="true"></script>
+    <script src="~/js/member/ModalImg.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,122 @@
+﻿@{
+    var user = await signInManager.UserManager.GetUserAsync(User);
+    var member = user != null ? await memberService.GetMemberByUserIdAsync(user.Id) : null;
+    var notifications = user != null ? await notificationService.GetNotificationsForUserAsync(user.Id, true) : new List<TaskAspNet.Data.Entities.NotificationEntity>();
+}
+
+<div class="top-bar">
+    <div class="top-bar-left">
+        <div class="search-container">
+            <i class="fas fa-search search-icon-topbar"></i>
+            <input id="searchBox" type="text" placeholder="Search anything..." class="search-input">
+        </div>
+    </div>
+
+    <div class="top-bar-right">
+        @if (signInManager.IsSignedIn(User))
+        {
+            <div class="top-bar-icons">
+                <div class="notification-container">
+                    <a href="#" class="icon-link" title="Notifications" onclick="toggleNotificationPanel(event)">
+                        <i class="fas fa-bell"></i>
+                        <span id="notificationBadge" class="notification-badge" style="display: none;">0</span>
+                    </a>
+                    <div id="notificationPanel" class="notification-panel">
+                        <div class="notification-header">
+                            <h3>Notifications</h3>
+                            <button onclick="markAllAsRead()" class="mark-all-read">Mark all as read</button>
+                            <button onclick="clearAllNotifications()" class="mark-all-read">Dismiss all</button>
+                        </div>
+                        <div id="notificationList" class="notification-list">
+                            @if (notifications.Any())
+                            {
+                                @foreach (var notification in notifications.OrderByDescending(n => n.CreatedAt))
+                                {
+                                    ProjectDto? project = null;
+                                    MemberDto? notifiedMember = null;
+
+                                    if (notification.RelatedEntityType == "Project" && int.TryParse(notification.RelatedEntityId, out var projectId))
+                                    {
+                                        project = await projectService.GetProjectByIdAsync(projectId);
+                                    }
+                                    else if (notification.RelatedEntityType == "Member" && int.TryParse(notification.RelatedEntityId, out var memId))
+                                    {
+                                        notifiedMember = await memberService.GetMemberByIdAsync(memId);
+                                    }
+
+                                    <div class="notification-item @(!notification.IsRead ? "unread" : "")"data-id="@notification.Id">
+
+                                        @if (project?.ImageData?.CurrentImage != null)
+                                        {
+                                            <img src="@project.ImageData.CurrentImage" alt="Project Image" class="notification-image" />
+                                        }
+                                        else if (notifiedMember?.ImageData?.CurrentImage != null)
+                                        {
+                                            <img src="@notifiedMember.ImageData.CurrentImage" alt="Member Image" class="notification-image" />
+                                        }
+                                        else if (member?.ImageData?.CurrentImage != null)
+                                        {
+                                            <img src="@member.ImageData.CurrentImage" alt="Member Image" class="notification-image" />
+                                        }
+
+                                        <div class="msg-stamp-wrapper">
+                                        <div class="notification-item-message">@notification.Message</div>
+                                            <div class="notification-item-time">@notification.CreatedAt.ToRelativeTime()</div>
+                                        </div>
+                                        <button class="delete-notification-btn"
+                                                onclick="deleteNotification(@notification.Id); event.stopPropagation();">
+                                            x
+                                        </button>
+                                    </div>
+                                }
+
+                            }
+                            else
+                            {
+                                <div class="notification-item">
+                                    <div class="notification-item-message">No notifications</div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="icon-link" title="Settings" data-modal="settingsModal">
+                    <i class="fas fa-cog"></i>
+                </a>
+                <a href="#" class="icon-link" title="Profile">
+                    <img src="@(!string.IsNullOrEmpty(member?.ImageData?.CurrentImage) ? member.ImageData.CurrentImage : "/images/membericon/card.png")" alt="Profile" class="profile-image">
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Settings Modal -->
+<div id="settingsModal" class="settings-modal modal-overlay" data-close-outside="true" style="display:none;">
+    <div class="settings-modal-content">
+        <div class="modal-header">
+            <h2>Settings</h2>
+            <span class="close-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div class="profile-section">
+                <img src="@(!string.IsNullOrEmpty(member?.ImageData?.CurrentImage) ? member.ImageData.CurrentImage : "/images/membericon/card.png")" alt="Profile" class="modal-profile-image">
+                <h3>@(member?.FirstName ?? "") @(member?.LastName ?? "")</h3>
+            </div>
+            <div class="settings-options">
+                <div class="setting-item">
+                    <span><i class="fas fa-cog fa-left"></i>Dark Mode</span>
+                    <label class="switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <hr class="logout-divider" />
+                <a asp-action="LogOut" asp-controller="Auth" class="logout-button">
+                    <i class="fas fa-sign-out-alt"></i> Log Out
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+

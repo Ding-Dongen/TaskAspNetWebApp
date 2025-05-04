@@ -1,0 +1,54 @@
+﻿@model MemberIndexViewModel
+
+<div class="member-container">
+    <div class="member-header">
+        <h2>Members</h2>
+        <button id="btnOpenCreateModal" data-modal="createMemberModal" class="btn btn-create-form">+ Add Member</button>
+    </div>
+
+  
+    <div class="member-list">
+        @foreach (var member in Model.PagedMembers)
+        {
+            @await Html.PartialAsync("~/Views/Shared/Partials/Components/Member/_MemberCard.cshtml", member) 
+        }
+    </div>
+    @Html.PagedListPager(Model.PagedMembers, page => Url.Action("Index", new { page }), new PagedListRenderOptions { MaximumPageNumbersToDisplay = 7 })
+
+</div>
+<div id="editMemberModal" class="modal-overlay create-modal-overlay edit-modal-overlay">
+        <div class="modal-content edit-modal-content">
+            <div class="edit-modal-header">
+                <h3 class="modal-title">Edit Member</h3>
+                <button class="modal-close" onclick="closeModal('editMemberModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="editMemberContainer">
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div id="createMemberModal" class="upload-modal-overlay create-upload-modal-overlay edit-upload-modal-overlay" style="display: none;">
+    <div class="upload-modal-content create-modal-content">
+        <h3 class="create-modal-title">New Member</h3>
+            <span class="close-modal">&times;</span>
+            <div id="createMemberContainer">
+                @await Html.PartialAsync("~/Views/Shared/Partials/Components/Member/_CreateEditMember.cshtml", Model.CreateMember)
+            </div>
+        </div>
+    </div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/member/MemberCard.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/member/Index.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/member/CreateEditMember.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/js/member/MemberCardMenu.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/member/CreateEditMember.js" asp-append-version="true"></script>
+    <script src="~/js/member/ModalImg.js" asp-append-version="true"></script>
+}

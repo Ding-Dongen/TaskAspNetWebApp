@@ -1,0 +1,86 @@
+﻿@model CookieConsentViewModel
+
+<!-- Hidden overlay -->
+<div id="cookieConsentModal" class="cookie-section">
+
+    <div class="cookie-wrapper">
+        <h2>Cookie Preferences</h2>
+        <p>We use different types of cookies to improve your experience.</p>
+
+        <div id="consentError" style="display: none; color: red; margin-bottom: 10px;"></div>
+
+        <form id="cookieConsentForm" method="post" action="/Consent/Save">
+            @Html.AntiForgeryToken()
+
+            <!-- Necessary Cookies -->
+            <div class="cookie-item">
+                <label class="switch-label">
+                    <span>Necessary Cookies (Always Enabled)</span>
+                    <input type="checkbox" name="NecessaryCookies" checked disabled />
+                    <span class="switch-slider"></span>
+                </label>
+                @* <div class="cookie-toggle" onclick="toggleInfo('infoNecessary')">Details</div>
+                <div class="cookie-info" id="infoNecessary">
+                    These cookies are required for the website to function and cannot be disabled.
+                </div> *@
+            </div>
+
+            <!-- Functional Cookies -->
+            <div class="cookie-item">
+                <label class="switch-label">
+                    <span>Functional Cookies</span>
+                    <input type="checkbox" name="FunctionalCookies" @(Model.FunctionalCookies ? "checked" : "") />
+                    <span class="switch-slider"></span>
+                </label>
+                <div class="cookie-toggle" data-toggle="cookie-info" data-target="infoFunctional">Details</div>
+                <div class="cookie-info" id="infoFunctional">
+                    Enhance your experience with saved preferences and smoother navigation.
+                </div>
+            </div>
+
+            <!-- Analytics Cookies -->
+            <div class="cookie-item">
+                <label class="switch-label">
+                    <span>Analytics Cookies</span>
+                    <input type="checkbox" name="AnalyticsCookies" @(Model.AnalyticsCookies ? "checked" : "") />
+                    <span class="switch-slider"></span>
+                </label>
+                <div class="cookie-toggle" data-toggle="cookie-info" data-target="infoAnalytics">Details</div>
+                <div class="cookie-info" id="infoAnalytics">
+                    Help us understand how visitors interact with our site.
+                </div>
+            </div>
+
+            <!-- Marketing Cookies -->
+            <div class="cookie-item">
+                <label class="switch-label">
+                    <span>Marketing Cookies</span>
+                    <input type="checkbox" name="MarketingCookies" @(Model.MarketingCookies ? "checked" : "") />
+                    <span class="switch-slider"></span>
+                </label>
+                <div class="cookie-toggle" data-toggle="cookie-info" data-target="infoMarketing">Details</div>
+                <div class="cookie-info" id="infoMarketing">
+                    Used to deliver personalized marketing content based on your behavior.
+                </div>
+            </div>
+
+            <!-- Advertising Cookies -->
+            <div class="cookie-item">
+                <label class="switch-label">
+                    <span>Advertising Cookies</span>
+                    <input type="checkbox" name="AdvertisingCookies" @(Model.AdvertisingCookies ? "checked" : "") />
+                    <span class="switch-slider"></span>
+                </label>
+                <div class="cookie-toggle" data-toggle="cookie-info" data-target="infoAdvertising">Details</div>
+                <div class="cookie-info" id="infoAdvertising">
+                    Enable ads that are more relevant to your interests.
+                </div>
+            </div>
+
+            <button type="button" id="btnAcceptAll" class="btn btn-primary">Accept All</button>
+            <button type="button" id="btnDeclineAll" class="btn btn-secondary">Decline All</button>
+            <button type="submit" class="btn btn-success">Save Preferences</button>
+        </form>
+
+    </div>
+</div>

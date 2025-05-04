@@ -1,0 +1,31 @@
+﻿
+
+
+<nav class="navigation-link">
+    @if (User.IsAdminOrSuperAdmin())
+    {
+        <a class="links @(Context.Request.Path == "/Project/Index" ? "active" : "")" asp-action="Index" asp-controller="Project">
+            <i class="fa-duotone fa-solid fa-briefcase"></i>
+            <span>Projects</span>
+        </a>
+        <a class="links @(Context.Request.Path == "/Member/Index" ? "active" : "")" asp-action="Index" asp-controller="Member">
+            <i class="fa-duotone fa-solid fa-users"></i>
+            <span>Team Members</span>
+        </a>
+        <a class="links @(Context.Request.Path == "/Admin/ManageUsers" ? "active" : "")" asp-action="ManageUsers" asp-controller="Admin">
+            <i class="fa-duotone fa-solid fa-bars-progress"></i>
+            <span>Manage Users</span>
+        </a>
+        <a class="links @(Context.Request.Path == "/Client/Index" ? "active" : "")" asp-action="Index" asp-controller="Client">
+            <i class="fa-duotone fa-solid fa-user-plus"></i>
+            <span>Manage Clients</span>
+        </a>
+    }
+    else
+    {
+        <a class="links @(Context.Request.Path == "/Project/Index" ? "active" : "")" asp-action="Index" asp-controller="Project">
+            <i class="fa-duotone fa-solid fa-briefcase"></i>
+            <span>Projects</span>
+        </a>
+    }
+</nav>
