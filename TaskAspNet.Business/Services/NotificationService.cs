@@ -67,7 +67,7 @@ public class NotificationService(
             Title = title,
             Message = message,
             NotificationTypeId = notificationTypeId,
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Europe/Stockholm")),
             IsRead = false,
             CreatedByUserId = createdByUserId,
             TargetUserId = targetUserId,

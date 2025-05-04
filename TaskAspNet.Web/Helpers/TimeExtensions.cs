@@ -17,7 +17,10 @@ public static class TimeExtensions
 {
     public static string ToRelativeTime(this DateTime dateTime)
     {
-        var ts = DateTime.UtcNow - dateTime.ToUniversalTime();
+        var stockholmTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Stockholm");
+        var nowInStockholm = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, stockholmTimeZone);
+        var ts = nowInStockholm - TimeZoneInfo.ConvertTime(dateTime, stockholmTimeZone);
+
 
         if (ts.TotalSeconds < 60)
             return "just now";

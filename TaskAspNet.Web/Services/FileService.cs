@@ -47,8 +47,6 @@ public class FileService : IFileService
                    return $"/images/{iconsFolder}/{imageData.SelectedImage}";
                }
 
-
-
         return null;
     }
 }

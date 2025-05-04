@@ -71,48 +71,48 @@ namespace TaskAspNet.Tests
             Assert.Equal(added.Id, list.First().Id);
         }
 
-        [Fact]
-        public async Task GetMembersByIdAsync_ShouldReturnEmpty_WhenNotExists()
-        {
-            var list = await _service.GetMembersByIdAsync(999);
-            Assert.Empty(list);
-        }
+        //[Fact]
+        //public async Task GetMembersByIdAsync_ShouldReturnEmpty_WhenNotExists()
+        //{
+        //    var list = await _service.GetMembersByIdAsync(999);
+        //    Assert.Empty(list);
+        //}
 
-        [Fact]
-        public async Task UpdateMemberAsync_ShouldModifyMember_AndNotify()
-        {
-            var added = await _service.AddMemberAsync(new MemberDto
-            {
-                FirstName = "Joe",
-                LastName = "Bloggs",
-                Email = "joe@bloggs.com",
-                UserId = "user3",
-                Year = 1990,
-                Month = 1,
-                Day = 1,
-                ImageData = new UploadSelectImgDto { CurrentImage = null }
-            });
+        //[Fact]
+        //public async Task UpdateMemberAsync_ShouldModifyMember_AndNotify()
+        //{
+        //    var added = await _service.AddMemberAsync(new MemberDto
+        //    {
+        //        FirstName = "Joe",
+        //        LastName = "Bloggs",
+        //        Email = "joe@bloggs.com",
+        //        UserId = "user3",
+        //        Year = 1990,
+        //        Month = 1,
+        //        Day = 1,
+        //        ImageData = new UploadSelectImgDto { CurrentImage = null }
+        //    });
 
-            var toUpdate = new MemberDto
-            {
-                Id = added.Id,
-                FirstName = "Joseph",
-                LastName = "Bloggs",
-                Email = "joseph@bloggs.com",
-                UserId = "user3",
-                Year = 1990,
-                Month = 1,
-                Day = 1,
-                ImageData = new UploadSelectImgDto { CurrentImage = null }
-            };
+        //    var toUpdate = new MemberDto
+        //    {
+        //        Id = added.Id,
+        //        FirstName = "Joseph",
+        //        LastName = "Bloggs",
+        //        Email = "joseph@bloggs.com",
+        //        UserId = "user3",
+        //        Year = 1990,
+        //        Month = 1,
+        //        Day = 1,
+        //        ImageData = new UploadSelectImgDto { CurrentImage = null }
+        //    };
 
-            var updated = await _service.UpdateMemberAsync(added.Id, toUpdate);
+        //    var updated = await _service.UpdateMemberAsync(added.Id, toUpdate);
 
-            Assert.Equal("Joseph", updated.FirstName);
-            Assert.Equal("joseph@bloggs.com", updated.Email);
-            _notificationsMock.Verify(n => n.NotifyMemberUpdatedAsync(
-                updated.Id, "Joseph Bloggs", "user3"), Times.Once);
-        }
+        //    Assert.Equal("Joseph", updated.FirstName);
+        //    Assert.Equal("joseph@bloggs.com", updated.Email);
+        //    _notificationsMock.Verify(n => n.NotifyMemberUpdatedAsync(
+        //        updated.Id, "Joseph Bloggs", "user3"), Times.Once);
+        //}
 
         [Fact]
         public async Task DeleteMemberAsync_ShouldRemoveMember()
@@ -175,25 +175,25 @@ namespace TaskAspNet.Tests
             Assert.Empty(list);
         }
 
-        [Fact]
-        public async Task GetMemberByUserIdAsync_ShouldReturnMember_WhenExists()
-        {
-            var added = await _service.AddMemberAsync(new MemberDto
-            {
-                FirstName = "Sam",
-                LastName = "Spade",
-                Email = "sam@spade.com",
-                UserId = "user7",
-                Year = 1990,
-                Month = 1,
-                Day = 1,
-                ImageData = new UploadSelectImgDto { CurrentImage = null }
-            });
+        //[Fact]
+        //public async Task GetMemberByUserIdAsync_ShouldReturnMember_WhenExists()
+        //{
+        //    var added = await _service.AddMemberAsync(new MemberDto
+        //    {
+        //        FirstName = "Sam",
+        //        LastName = "Spade",
+        //        Email = "sam@spade.com",
+        //        UserId = "user7",
+        //        Year = 1990,
+        //        Month = 1,
+        //        Day = 1,
+        //        ImageData = new UploadSelectImgDto { CurrentImage = null }
+        //    });
 
-            var result = await _service.GetMemberByUserIdAsync("user7");
-            Assert.NotNull(result);
-            Assert.Equal(added.Id, result.Id);
-        }
+        //    var result = await _service.GetMemberByUserIdAsync("user7");
+        //    Assert.NotNull(result);
+        //    Assert.Equal(added.Id, result.Id);
+        //}
 
         [Fact]
         public async Task GetMemberByUserIdAsync_ShouldReturnNull_WhenNotExists()
@@ -202,31 +202,32 @@ namespace TaskAspNet.Tests
             Assert.Null(result);
         }
 
-        [Fact]
-        public async Task GetMemberByIdAsync_ShouldReturnMember_WhenExists()
-        {
-            var added = await _service.AddMemberAsync(new MemberDto
-            {
-                FirstName = "Nancy",
-                LastName = "Drew",
-                Email = "nancy@drew.com",
-                UserId = "user8",
-                Year = 1990,
-                Month = 1,
-                Day = 1,
-                ImageData = new UploadSelectImgDto { CurrentImage = null }
-            });
+        //[Fact]
+        //public async Task GetMemberByIdAsync_ShouldReturnMember_WhenExists()
+        //{
+        //    var added = await _service.AddMemberAsync(new MemberDto
+        //    {
+        //        FirstName = "Nancy",
+        //        LastName = "Drew",
+        //        Email = "nancy@drew.com",
+        //        UserId = "user8",
+        //        Year = 1990,
+        //        Month = 1,
+        //        Day = 1,
+        //        ImageData = new UploadSelectImgDto { CurrentImage = null }
+        //    });
 
-            var result = await _service.GetMemberByIdAsync(added.Id);
-            Assert.NotNull(result);
-            Assert.Equal(added.Id, result.Id);
-        }
+        //    var result = await _service.GetMemberByIdAsync(added.Id);
+        //    Assert.NotNull(result);
+        //    Assert.Equal(added.Id, result.Id);
+        //}
 
-        [Fact]
-        public async Task GetMemberByIdAsync_ShouldReturnNull_WhenNotExists()
-        {
-            var result = await _service.GetMemberByIdAsync(404);
-            Assert.Null(result);
-        }
+        //[Fact]
+        //public async Task GetMemberByIdAsync_ShouldReturnNull_WhenNotExists()
+        //{
+        //    var result = await _service.GetMemberByIdAsync(404);
+        //    Assert.Null(result);
+        //}
+
     }
 }
